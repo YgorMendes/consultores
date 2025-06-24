@@ -143,20 +143,21 @@ Estou interessado em um seguro para o meu veículo com placa *${carCode}*. Poder
                 name="userName"
                 label="Digite seu nome"
               >
-                <Input />
+                <Input size="large" />
               </Form.Item>
 
               <Form.Item
                 name="carCode"
                 label="Digite a placa do seu veículo"
               >
-                <Input />
+                <Input size="large" />
               </Form.Item>
 
               <Button
                 type='primary'
                 onClick={handleClickNext}
                 disabled={disabled}
+                size="large"
               >
                 Conheça seu consultor agora
               </Button>
