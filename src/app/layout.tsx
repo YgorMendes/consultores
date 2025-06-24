@@ -15,6 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <link rel="icon" href="https://vercel.com/favicon.ico" />
       <body>{children}</body>
       <Analytics />
     </html>
