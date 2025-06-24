@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 import { getDatabase, ref, get, update } from "firebase/database";
-import { getAnalytics, logEvent } from "firebase/analytics";
+import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
 import Logo77Seguros from "../assets/seguros77";
 import { Button, Form, Input } from "antd";
 
@@ -29,7 +29,7 @@ const Home = () => {
   const database = getDatabase(firebase);
   const auth = getAuth(firebase); // Se for usar Autenticação
   const storage = getStorage(firebase); // Se for usar Storage
-  const analytics = getAnalytics(firebase);
+  // const analytics = getAnalytics(firebase);
   const [fila, setFila] = useState<number>();
   const [consultorISVisible, setConsultorISVisible] = useState(false);
   const [form] = Form.useForm();
@@ -108,6 +108,22 @@ Estou interessado em um seguro para o meu veículo com placa *${carCode}*. Poder
   useEffect(() => {
     checkFormValidity();
   }, [])
+
+  const [analytics, setAnalytics] = useState<any>(null);
+
+  useEffect(() => {
+    const initAnalytics = async () => {
+      const supported = await isSupported();
+      if (supported) {
+        const analyticsInstance = getAnalytics(firebase);
+        setAnalytics(analyticsInstance);
+      } else {
+        console.log("Firebase Analytics não suportado neste ambiente.");
+      }
+    };
+
+    initAnalytics();
+  }, []);
 
   return (
     <div className="home-container">
