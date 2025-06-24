@@ -1,0 +1,18 @@
+{
+  "format": "custom",
+  "id": "followers",
+  "label": "followers",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "followers": {
+        "type": "Text",
+        "config": {
+          "label": "seguidores do instagram",
+          "placeholder": "Número de seguidores do card do instagram"
+        }
+      }
+    }
+  }
+}

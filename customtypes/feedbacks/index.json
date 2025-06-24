@@ -1,0 +1,18 @@
+{
+  "format": "custom",
+  "id": "feedbacks",
+  "label": "feedbacks",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "feedbacks": {
+        "type": "Text",
+        "config": {
+          "label": "Feedbacks",
+          "placeholder": "Número de feedbacks do card do instagram"
+        }
+      }
+    }
+  }
+}
