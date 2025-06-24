@@ -38,9 +38,9 @@ const Home = () => {
   const [carCode, setCarCode] = useState<string>('');
 
   const dataConsultores = [
-    { id: 0, name: 'Wil Fernandes', description: 'Representante de Seguros Wilson Fernandes, 30 anos, trabalha no ramo de seguros a 4 anos, já ajudou a mais de mil clientes a encontrar o seguro ideal.', img: 'san.jpg', number: '11983105012', analytics: 'Will-Fernandes' },
-    { id: 1, name: 'Ygor Mendes', description: 'Representante de Seguros Ygor Mendes, 27 anos, trabalha no ramo de seguros a 4 dias, não ajudou ninguém, seja o primeiro, vem pra base!!! :)', img: 'ygor.jpg', number: '11959624575', analytics: 'Ygor-Mendes' },
-    { id: 2, name: 'Isac Arena', description: 'Representante de Seguros e Social Media Isac Arena, 35 anos, trabalha no ramo de seguros a 12 Anos, já ajudou a mais de mil clientes a encontrar o seguro por todo o Brasil.', img: 'isac.jpg', number: '11965618576', analytics: 'Isac-Arena' },
+    { id: 0, name: 'Wil Fernandes', description: 'Representante de Seguros Wilson Fernandes, 30 anos, trabalha no ramo de seguros a 4 anos, já ajudou a mais de mil clientes a encontrar o seguro ideal.', img: 'san.jpg', number: '5511983105012', analytics: 'Will-Fernandes' },
+    { id: 1, name: 'Ygor Mendes', description: 'Representante de Seguros Ygor Mendes, 27 anos, trabalha no ramo de seguros a 4 dias, não ajudou ninguém, seja o primeiro, vem pra base!!! :)', img: 'ygor.jpg', number: '5511959624575', analytics: 'Ygor-Mendes' },
+    { id: 2, name: 'Isac Arena', description: 'Representante de Seguros e Social Media Isac Arena, 35 anos, trabalha no ramo de seguros a 12 Anos, já ajudou a mais de mil clientes a encontrar o seguro por todo o Brasil.', img: 'isac.jpg', number: '5511965618576', analytics: 'Isac-Arena' },
   ];
 
   function enviarWhatsApp(numero: string, mensagem = "") {
