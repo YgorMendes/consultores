@@ -9,27 +9,27 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 import Logo77Seguros from "../assets/seguros77";
 import { Button, Form, Input } from "antd";
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_apiKey,
-  authDomain: process.env.NEXT_PUBLIC_authDomain,
-  databaseURL: process.env.NEXT_PUBLIC_databaseURL,
-  projectId: process.env.NEXT_PUBLIC_projectId,
-  storageBucket: process.env.NEXT_PUBLIC_storageBucket,
-  messagingSenderId: process.env.NEXT_PUBLIC_messagingSenderId,
-  appId: process.env.NEXT_PUBLIC_appId,
-  measurementId: process.env.NEXT_PUBLIC_measurementId,
-};
 
 // Inicializa o Firebase
-const firebase = initializeApp(firebaseConfig);
-
-// Obtém instâncias dos serviços
-const database = getDatabase(firebase);
-const auth = getAuth(firebase); // Se for usar Autenticação
-const storage = getStorage(firebase); // Se for usar Storage
-const analytics = getAnalytics(firebase);
 
 const Home = () => {
+  const firebaseConfig = {
+    apiKey: process.env.NEXT_PUBLIC_apiKey,
+    authDomain: process.env.NEXT_PUBLIC_authDomain,
+    databaseURL: process.env.NEXT_PUBLIC_databaseURL,
+    projectId: process.env.NEXT_PUBLIC_projectId,
+    storageBucket: process.env.NEXT_PUBLIC_storageBucket,
+    messagingSenderId: process.env.NEXT_PUBLIC_messagingSenderId,
+    appId: process.env.NEXT_PUBLIC_appId,
+    measurementId: process.env.NEXT_PUBLIC_measurementId,
+  };
+  const firebase = initializeApp(firebaseConfig);
+
+  // Obtém instâncias dos serviços
+  const database = getDatabase(firebase);
+  const auth = getAuth(firebase); // Se for usar Autenticação
+  const storage = getStorage(firebase); // Se for usar Storage
+  const analytics = getAnalytics(firebase);
   const [fila, setFila] = useState<number>();
   const [consultorISVisible, setConsultorISVisible] = useState(false);
   const [form] = Form.useForm();
