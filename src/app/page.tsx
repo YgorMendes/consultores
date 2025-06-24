@@ -24,9 +24,9 @@ const firebaseConfig = {
 const firebase = initializeApp(firebaseConfig);
 
 // Obtém instâncias dos serviços
-export const database = getDatabase(firebase);
-export const auth = getAuth(firebase); // Se for usar Autenticação
-export const storage = getStorage(firebase); // Se for usar Storage
+const database = getDatabase(firebase);
+const auth = getAuth(firebase); // Se for usar Autenticação
+const storage = getStorage(firebase); // Se for usar Storage
 const analytics = getAnalytics(firebase);
 
 const Home = () => {
