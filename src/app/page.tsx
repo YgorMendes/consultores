@@ -39,9 +39,8 @@ const Home = () => {
   const salvarEvento = async () => {
     console.log(dataConsultor?.representante_numero, dataConsultor?.representante_nome)
     if (fila || fila === '1') {
-      enviarWhatsApp(dataConsultor?.representante_numero, `Olá! 
-        
-        Gostaria de fazer uma cotação do meu veículo, pode me ajudar?`);
+      enviarWhatsApp(dataConsultor?.representante_numero, `Olá!
+Gostaria de fazer uma cotação do meu veículo, pode me ajudar?`);
 
       logEvent(analytics, 'chat_iniciado', {
         consultor_id: dataConsultor?.representante_nome
