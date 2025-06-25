@@ -5,70 +5,60 @@ import type * as prismic from "@prismicio/client";
 type Simplify<T> = { [KeyType in keyof T]: T[KeyType] };
 
 /**
- * Content for feedbacks documents
+ * Content for consultor documents
  */
-interface FeedbacksDocumentData {
+interface ConsultorDocumentData {
   /**
-   * Feedbacks field in *feedbacks*
+   * Representante Imagem field in *consultor*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: consultor.representante_imagem
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  representante_imagem: prismic.ImageField<never>;
+
+  /**
+   * Representante Nome field in *consultor*
    *
    * - **Field Type**: Text
-   * - **Placeholder**: Número de feedbacks do card do instagram
-   * - **API ID Path**: feedbacks.feedbacks
+   * - **Placeholder**: *None*
+   * - **API ID Path**: consultor.representante_nome
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/field#key-text
    */
-  feedbacks: prismic.KeyTextField;
+  representante_nome: prismic.KeyTextField;
+
+  /**
+   * Representante Número field in *consultor*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: consultor.representante_numero
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  representante_numero: prismic.KeyTextField;
 }
 
 /**
- * feedbacks document from Prismic
+ * consultor document from Prismic
  *
- * - **API ID**: `feedbacks`
- * - **Repeatable**: `false`
+ * - **API ID**: `consultor`
+ * - **Repeatable**: `true`
  * - **Documentation**: https://prismic.io/docs/custom-types
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type FeedbacksDocument<Lang extends string = string> =
-  prismic.PrismicDocumentWithoutUID<
-    Simplify<FeedbacksDocumentData>,
-    "feedbacks",
+export type ConsultorDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<
+    Simplify<ConsultorDocumentData>,
+    "consultor",
     Lang
   >;
 
-/**
- * Content for followers documents
- */
-interface FollowersDocumentData {
-  /**
-   * seguidores do instagram field in *followers*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: Número de seguidores do card do instagram
-   * - **API ID Path**: followers.followers
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/field#key-text
-   */
-  followers: prismic.KeyTextField;
-}
-
-/**
- * followers document from Prismic
- *
- * - **API ID**: `followers`
- * - **Repeatable**: `false`
- * - **Documentation**: https://prismic.io/docs/custom-types
- *
- * @typeParam Lang - Language API ID of the document.
- */
-export type FollowersDocument<Lang extends string = string> =
-  prismic.PrismicDocumentWithoutUID<
-    Simplify<FollowersDocumentData>,
-    "followers",
-    Lang
-  >;
-
-export type AllDocumentTypes = FeedbacksDocument | FollowersDocument;
+export type AllDocumentTypes = ConsultorDocument;
 
 declare module "@prismicio/client" {
   interface CreateClient {
@@ -90,12 +80,6 @@ declare module "@prismicio/client" {
   }
 
   namespace Content {
-    export type {
-      FeedbacksDocument,
-      FeedbacksDocumentData,
-      FollowersDocument,
-      FollowersDocumentData,
-      AllDocumentTypes,
-    };
+    export type { ConsultorDocument, ConsultorDocumentData, AllDocumentTypes };
   }
 }

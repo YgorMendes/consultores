@@ -2,15 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
 import { getDatabase, ref, get, update } from "firebase/database";
 import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
 import Logo77Seguros from "../assets/seguros77";
-import { Button, Form, Input } from "antd";
-
-
-// Inicializa o Firebase
+import * as prismic from '@prismicio/client'
+import LogoGrande from "@/assets/seguros77All";
+import BGImg from "@/assets/bgImg";
 
 const Home = () => {
   const firebaseConfig = {
@@ -24,54 +21,43 @@ const Home = () => {
     measurementId: process.env.NEXT_PUBLIC_measurementId,
   };
   const firebase = initializeApp(firebaseConfig);
-
-  // Obtém instâncias dos serviços
   const database = getDatabase(firebase);
-  const auth = getAuth(firebase); // Se for usar Autenticação
-  const storage = getStorage(firebase); // Se for usar Storage
-  // const analytics = getAnalytics(firebase);
-  const [fila, setFila] = useState<number>();
-  const [consultorISVisible, setConsultorISVisible] = useState(false);
-  const [form] = Form.useForm();
-  const [disabled, setDisabled] = useState(true);
-  const [userName, setUserName] = useState<string>('');
-  const [carCode, setCarCode] = useState<string>('');
 
-  const dataConsultores = [
-    { id: 0, name: 'Wil Fernandes', description: 'Representante de Seguros Wilson Fernandes, 30 anos, trabalha no ramo de seguros a 4 anos, já ajudou a mais de mil clientes a encontrar o seguro ideal.', img: 'san.jpg', number: '5511983105012', analytics: 'Will-Fernandes' },
-    { id: 1, name: 'Ygor Mendes', description: 'Representante de Seguros Ygor Mendes, 27 anos, trabalha no ramo de seguros a 4 dias, não ajudou ninguém, seja o primeiro, vem pra base!!! :)', img: 'ygor.jpg', number: '5511959624575', analytics: 'Ygor-Mendes' },
-    { id: 2, name: 'Isac Arena', description: 'Representante de Seguros e Social Media Isac Arena, 35 anos, trabalha no ramo de seguros a 12 Anos, já ajudou a mais de mil clientes a encontrar o seguro por todo o Brasil.', img: 'isac.jpg', number: '5511965618576', analytics: 'Isac-Arena' },
-  ];
+
+  const [fila, setFila] = useState<string>();
+  const [dataConsultor, setDataConsultor] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<any>(null);
 
   function enviarWhatsApp(numero: string, mensagem = "") {
     const mensagemEncode = encodeURIComponent(mensagem);
     const url = `https://wa.me/${numero}?text=${mensagemEncode}`;
 
-    window.open(url, "_blank"); // Abre em nova aba
+    window.open(url, "_blank");
   }
 
 
-  const trocarConsultor = async () => {
-    if (fila || fila === 0) {
-      enviarWhatsApp(dataConsultores[fila]?.number, `Olá, meu nome é ${userName}
-
-Estou interessado em um seguro para o meu veículo com placa *${carCode}*. Poderia me ajudar?`);
+  const salvarEvento = async () => {
+    console.log(dataConsultor?.representante_numero, dataConsultor?.representante_nome)
+    if (fila || fila === '1') {
+      enviarWhatsApp(dataConsultor?.representante_numero, `Olá! 
+        
+        Gostaria de fazer uma cotação do meu veículo, pode me ajudar?`);
 
       logEvent(analytics, 'chat_iniciado', {
-        consultor_id: dataConsultores[fila]?.analytics // Use um nome descritivo para o parâmetro
+        consultor_id: dataConsultor?.representante_nome
       });
     }
   };
 
-
+  const client = prismic.createClient('leads');
   useEffect(() => {
     const fetchData = async () => {
       const snapshot = await get(ref(database, "contador"));
-      console.log('Fila consultor:', snapshot.val());
       setFila(snapshot.val());
-      console.log(snapshot)
-      if (snapshot.val() == 2) {
-        const novoContador = 0;
+      const numeroDeConsultores = (await client.getAllByType('consultor')).length
+      console.log({ numeroDeConsultores });
+      if (snapshot.val() == numeroDeConsultores) {
+        const novoContador = 1;
         await update(ref(database), { contador: novoContador });
       } else {
         const contadorSnap = await get(ref(database, "contador"));
@@ -85,31 +71,21 @@ Estou interessado em um seguro para o meu veículo com placa *${carCode}*. Poder
     fetchData();
   }, []);
 
-  function handleClickNext(event: any) {
-    console.log(event)
-
-    setUserName(form.getFieldValue('userName'));
-    setCarCode(form.getFieldValue('carCode'));
-    setConsultorISVisible(true);
-  }
-
-  function checkFormValidity() {
-    const requiredFields = [
-      'userName',
-      'carCode'
-    ];
-    const hasErrors = form.getFieldsError().some(({ errors }) => errors.length > 0);
-    const requiredTouched = form.isFieldsTouched(requiredFields, true);
-    const allFieldsValid = !hasErrors;
-
-    setDisabled(!(requiredTouched && allFieldsValid));
-  }
-
   useEffect(() => {
-    checkFormValidity();
-  }, [])
+    const fetchConsultor = async () => {
+      if (!fila) return;
 
-  const [analytics, setAnalytics] = useState<any>(null);
+      try {
+        const responseConsultor: any = await client.getByUID('consultor', String(fila));
+        setDataConsultor(responseConsultor?.data);
+      } catch (error) {
+        console.error('Erro ao buscar consultor:', error);''
+      }
+    }
+
+    fetchConsultor()
+  }, [fila]);
+
 
   useEffect(() => {
     const initAnalytics = async () => {
@@ -127,53 +103,21 @@ Estou interessado em um seguro para o meu veículo com placa *${carCode}*. Poder
 
   return (
     <div className="home-container">
-      <h1 className="page-title"><Logo77Seguros style={{ transform: 'scale(1.4)', marginRight: '16px' }} /> 77 Seguros</h1>
-
+      <div className={`bgEffect ${dataConsultor ? 'animation' : ''}`} />
       {
-        consultorISVisible === false
+        dataConsultor
           ? (
-            <Form
-              form={form}
-              onFinish={handleClickNext}
-              layout="vertical"
-              className={'step1_form'}
-              onFieldsChange={checkFormValidity}
-            >
-              <Form.Item
-                name="userName"
-                label="Digite seu nome"
-              >
-                <Input size="large" />
-              </Form.Item>
-
-              <Form.Item
-                name="carCode"
-                label="Digite a placa do seu veículo"
-              >
-                <Input size="large" />
-              </Form.Item>
-
-              <Button
-                type='primary'
-                onClick={handleClickNext}
-                disabled={disabled}
-                size="large"
-              >
-                Conheça seu consultor agora
-              </Button>
-            </Form>
-
-          )
-          : (fila || fila === 0) && (
-            <div className="dashboard">
-
-              <img src={dataConsultores[fila]?.img} alt="Imagem do Consultor" />
-              <h2 className="dashboard-title">{dataConsultores[fila]?.name}</h2>
-              <p className="dashboard-description">{dataConsultores[fila]?.description}</p>
-              <button data-consultor-id={dataConsultores[fila]?.analytics} onClick={trocarConsultor} className="talk-btn">Falar com Consultor</button>
+            <div className={`dashboard ${dataConsultor ? 'cardAnimation' : ''}`}>
+              <img src={dataConsultor?.representante_imagem.url} alt="Representante Imagem" />
+              <BGImg className="bgImg" />
+              <h2 className="dashboard-title">{dataConsultor?.representante_nome}</h2>
+              <button data-consultor-id={dataConsultor?.representante_nome} onClick={salvarEvento} className="talk-btn">Falar com representante</button>
+              <h1 className="page-icon"><LogoGrande /></h1>
             </div>
           )
+          : <Logo77Seguros className="loading-icon" />
       }
+
     </div>
   );
 };
